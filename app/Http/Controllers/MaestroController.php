@@ -77,14 +77,15 @@ class MaestroController extends Controller
     {
         $maestro->update($request->all());
 
-        return response()->json(
+        return $maestro;
+        /*return response()->json(
             [
                 "message" => "Proceso realizado correctamente.",
                 "data" => $maestro,
                 "status" => Response::HTTP_OK
             ],
             Response::HTTP_OK
-        );
+        );*/
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Clase;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class ClaseController extends Controller
 {
@@ -15,15 +16,20 @@ class ClaseController extends Controller
      */
     public function index()
     {
-        $clases = Clase::all();
+        $clases = DB::table('clases')
+            ->join('maestros', 'maestros.id', '=', 'clases.maestro_id')
+            ->select(
+                'clases.nombre',
+                'clases.salon', 
+                DB::raw('CONCAT(maestros.nombre, \' \', maestros.apellidos) as nombre_maestro'), 
+                'clases.created_at',
+                'clases.updated_at',
+                'clases.id',
+                'clases.maestro_id'
+            )
+            ->get();
 
-        return response()->json(
-            [
-                "data" => $clases,
-                "status" => Response::HTTP_OK
-            ],
-            Response::HTTP_OK
-        );
+        return $clases;
     }
 
     /**
@@ -54,13 +60,14 @@ class ClaseController extends Controller
      */
     public function show(Clase $clase)
     {
-        return response()->json(
+        return $clase;
+        /*return response()->json(
             [
                 "data" => $clase,
                 "status" => Response::HTTP_OK
             ],
             Response::HTTP_OK
-        );
+        );*/
     }
 
     /**
@@ -74,14 +81,15 @@ class ClaseController extends Controller
     {
         $clase->update($request->all());
 
-        return response()->json(
+        return $clase;
+        /*return response()->json(
             [
                 "message" => "Proceso realizado correctamente.",
                 "data" => $clase,
                 "status" => Response::HTTP_OK
             ],
             Response::HTTP_OK
-        );
+        );*/
     }
 
     /**
